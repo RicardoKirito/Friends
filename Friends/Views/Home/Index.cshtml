@@ -1,0 +1,139 @@
+﻿@using Friends.Core.Application.ViewModels.Post;
+@using Friends.Core.Application.ViewModels.User;
+@using Friends.Core.Application.ViewModels.Comment;
+@using Friends.Core.Application.Helpers;
+@inject IHttpContextAccessor httpContext;
+@model SavePostViewModel
+@{
+    UserViewModel user = httpContext.HttpContext.Session.Get<UserViewModel>("User");
+    
+}
+
+<div class="justify-content-center">
+
+    <div class="container h-100 mb-4">
+
+        <div class="card rounded mb-4 post m-auto" style="min-height:170px; width: 700px">
+            <form method="post" enctype="multipart/form-data"  asp-controller="Home" asp-action="CreatePost">
+                <div class=" card-header border-0 mb-2 pb-0">
+                    <label for="foto" class="btn bg-active rounded-pill" data-bs-toggle="collapse">
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="20px" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+                            </svg>
+                        </span> Add an Imagen
+                    </label>
+                    <hr style="margin-top: 10px" />
+                </div>
+                <div class=" row card-body pt-0 pb-0 mb-4">
+                    <div class="collapse" id="fotos">
+                        <input id="foto" asp-for="File" class="form-control"/>
+                    </div>
+                    <div class="d-flex new-post align-content-center">
+                        <input type="hidden" value="@user.Id" asp-for="UserId" />
+                        <input type="hidden" asp-for="Id" value="0"/>
+                        <input type="hidden" asp-for="Title" />
+                        <input type="hidden" asp-for="ImagePath" />
+                        <textarea class="w-100 border-0 bg-transparent" placeholder="Share your thoughts" rows="1" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' autocomplete="off" asp-for="Content"></textarea>
+                        <input type="submit" class="btn bg-active rounded-pill" value="Post" />
+                        @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+            </form>
+         </div>
+
+         @foreach(PostViewModel post in ViewBag.User){
+            
+             <!--PUBLICACIONES -->
+            <div class="card mb-4 post pb-3 m-auto" style=" width: 700px;">
+               <div class="card-header border-0" >
+                 <input type="hidden" value="@post.Id" name="postId" id="postId" />
+                 <div class="d-flex justify-content-between align-content-center">
+                    <div class="d-flex gap-3">
+
+                        <img src="@post.User.Picture" alt="No hay foto" style="height: 48px; width: 48px; border-radius: 25px">
+                 
+                        <div> 
+                            <h7 style="font-size: 25px">@post.User.Name @post.User.LastName</h7>
+
+                            <p class="text-secondary">@post.Date</p>
+                        
+                        </div>
+                    </div>
+                    <div class="btn-group ">
+                            <button class="btn" style="rotate:90deg;" data-bs-toggle="dropdown"><strong>. . .</strong></button>
+                         <ul class="dropdown-menu">
+                                <a class="dropdown-item" data-bs-toggle="collapse" href="@post.Id #update">Edit</a>
+                                <a class="dropdown-item" asp-controller="Home" asp-action="DeletePost" asp-route-id="@post.Id">Delete</a>
+
+
+                         </ul>
+                     </div>
+                 </div>
+
+               </div>
+             <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="UpdatePost">
+                     <div class="collapse" id="update">
+                        <input asp-for="File" class="form-control" />
+                        <input type="hidden" value="@user.Id" asp-for="UserId" />
+                        <input type="hidden" asp-for="Id" value="@post.Id" />
+                        <input type="hidden" asp-for="Title" value="@post.Title"/>
+                        <input type="hidden" asp-for="ImagePath" value="@post.ImagePath"/>
+                        <textarea class="w-100 border-0" placeholder="Actualiza... tu post" rows="1" style="resize: none; font-size:larger" asp-for="Content" value="@post.Content">@post.Content</textarea>
+                        <button type="submit" class="btn text-primary">Actualizar</button>
+                        @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+                    </div>
+                 </form>
+                  <div>  
+                 <p style="font-size:20px">@post.Content </p>
+                 <!--IMAGE CARRUSEL-->
+                 @if(post.ImagePath != null && post.ImagePath.Count()>=10){
+                        <div id="carouselExampleControls" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                        <img src="@post.ImagePath" class="d-block w-100 rounded" alt="...">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                 }
+             </div>
+             </div>
+                <div class="card-footer border-0 comment" style="border-radius:21px;">
+                    <form method="post" asp-controller="Home" asp-action="CreateComment">
+                     <div class="d-flex">
+                         <input name="PostId" type="hidden" value="@post.Id" />
+                            <input placeholder="Add a comment..." class="form-control border-0" name="Content" type="text" required  autocomplete="off"/>
+                        <button type="submit" class="btn text-primary">Send</button>
+                     </div>
+                 </form>
+                        <hr />
+             </div>
+             @foreach(CommentViewModel comment in post.Comments){
+                    <div class="d-flex ms-3 mb-2 gap-2 comments">
+                        <figure style="height: 40px; width: 40px;  border-radius: 14px; overflow: clip;">
+                        <img src="@comment.User.Picture" style="height:100%; width: 100%; object-fit: cover;"/>
+
+                      </figure>
+                        <div>
+                            <h6 class="mb-0">@comment.User.Name @comment.User.LastName</h6>
+                            <p class =" mb-0">@comment.Content</p>
+                        </div> 
+                    </div>
+             }
+            </div>
+
+         } 
+    </div>
+</div>
+
+

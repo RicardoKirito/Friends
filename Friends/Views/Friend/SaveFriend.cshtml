@@ -1,0 +1,24 @@
+﻿
+
+
+<div class="d-flex justify-content-center">
+
+    <div class="card border-2 p-5 shadow">
+            <div class="card-header d-block bg-white border-0">
+                <h1>Look for your friends!</h1>
+                <p>Type your friend's username to add them</p>
+            </div>
+            <div class="card-body border-0">
+                <form method="post" asp-controller="Friend" asp-action="SaveFriend">
+
+                    <input class="form-control rounded-pill mb-3" name="Username" placeholder="Username" required />
+                    <button type="submit" class="btn btn-primary rounded-pill bg-active">Add</button>
+                    <a class="btn btn-outline-secondary rounded-pill" asp-controller="Friend" asp-action="Index">Back</a> 
+                    <span class="text-@ViewBag.Text">@ViewBag.Valid</span>
+                </form>
+            </div>
+            <div class="card-footer bg-white border-0">
+            </div>
+        </div>
+    </div>
+</div>

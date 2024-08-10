@@ -1,0 +1,101 @@
+﻿@using Friends.Core.Application.ViewModels.Friendship;
+@using Friends.Core.Application.ViewModels.User;
+@using Friends.Core.Application.Helpers;
+@inject IHttpContextAccessor httpContext;
+
+@{
+    UserViewModel user = httpContext.HttpContext.Session.Get<UserViewModel>("User");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Friends</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Friends.styles.css" asp-append-version="true" />
+</head>
+<body class="d-flex flex-column">
+     @if(user!=null){
+    <div class="d-flex">
+
+            <header class="top-0 vh-100 d-flex position-sticky" style="z-index: 10">
+                <nav class="navbar  bg-white border-bottom rounded align-self-center ms-2 p-2 box-shado d-flex flex-column" style="width: max-content;">
+                <a class="navbar-brand fs-3 title" asp-area="" asp-controller="Home" asp-action="Index">Friends</a>
+                <div class="container-fluid">
+                    <div class="navbar-collapse collapse d-flex flex-column justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                                <li class="nav-item nv-active">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                                        <span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"width="20px" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                                            </svg>
+                                        </span> Home
+                                    </a>
+                                </li>
+                                <li class="nav-item nv-active">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Friend" asp-action="Index">
+                                        <span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20px" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                                            </svg>
+                                        </span> Friends
+                                    </a>
+                                </li>
+                        </ul>
+                    </div>
+                </div>
+                    <ul class="navbar-nav">
+                    <li class="nav-item">
+                            <a class="nav-link" style="color: salmon" asp-area="" asp-controller="User" asp-action="LogOut">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20px" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+                                    </svg>
+                                </span> Log out
+                            </a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        <div class="container flex-grow-1 ">
+            <main role="main" class="pb-3" style="margin-top: 11vh;">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+        }else{
+            <style>
+                body{
+                background: linear-gradient(-45deg, #9EB57D, #C8D8C0, #23a6d5, #23d5ab);
+                background-size: 400% 400%;
+                animation: gradient 15s ease infinite;
+                }
+               .title{
+                   background: linear-gradient(to top, #999 10%, #fff 40%);
+                   background-clip: text;
+                   -webkit-text-fill-color: transparent;
+                   letter-spacing: 3rem;
+               }
+            </style>
+            <h1 class=" text-center title" style="font-size:10vw">FRIENDS</h1>
+        <div class="container flex-grow-1">
+            <main role="main" class="pb-3" style="margin-top: 11vh;">
+                @RenderBody()
+            </main>
+        </div>
+        }
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - Friends - 
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
